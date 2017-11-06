@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qin.dao.UserDao">
+
+    <resultMap id="userMap" type="com.qin.entity.TUser">
+        <id column="ID" property="ID"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="department" property="department"/>
+        <result column="subject" property="subject"/>
+    </resultMap>
+
+    <sql id="sqlselect">
+      select ID,name,sex,department,subject
+    </sql>
+
+    <insert id="addUser" parameterType="com.qin.entity.TUser">
+        insert into user(ID,name,sex,department,subject)
+        values(#{ID},#{name},#{sex},#{department},#{subject})
+    </insert>
+
+    <delete id="deleteUser" parameterType="java.lang.String">
+        delete from user where ID=#{id}
+    </delete>
+
+    <update id="updateUser" parameterType="com.qin.entity.TUser">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="ID!=null">
+              ID=#{ID},
+            </if>
+            <if test="name!=null">
+              name=#{name}
+            </if>
+            <if test="sex!=null">
+              sex=#{sex}
+            </if>
+            <if test="department">
+              department=#{department}
+            </if>
+            <if test="subject">
+              subject=#{subject}
+            </if>
+        </trim>
+    </update>
+
+    <select id="getUser" parameterType="java.lang.String" resultMap="userMap">
+        <include refid="sqlselect"/>
+        from user where ID=#{id}
+    </select>
+</mapper>
