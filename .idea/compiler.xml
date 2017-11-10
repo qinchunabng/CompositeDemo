@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="CacheDemo" />
+        <module name="MQDemo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="CacheDemo" target="1.5" />
+      <module name="MQDemo" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
