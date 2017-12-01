@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/DubboConsumerDemo" />
+    <file type="web" url="file://$PROJECT_DIR$/DubboProviderDemo" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/../CacheDemo/pom.xml" />
         <option value="$PROJECT_DIR$/CacheDemo/pom.xml" />
         <option value="$PROJECT_DIR$/MQDemo/pom.xml" />
+        <option value="$PROJECT_DIR$/DubboDemo/pom.xml" />
+        <option value="$PROJECT_DIR$/DubboConsumerDemo/pom.xml" />
+        <option value="$PROJECT_DIR$/DubboProviderDemo/pom.xml" />
       </list>
     </option>
   </component>

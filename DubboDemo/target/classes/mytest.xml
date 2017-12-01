@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:qin="http://www.qin.com/schema/soa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.qin.com/schema/soa http://www.qin.com/schema/soa.xsd">
+
+   <!-- <bean id="userServiceImpl1" class="com.qin.test.UserServiceImpl"/>
+    <bean id="userServiceImpl2" class="com.qin.test.UserServiceImpl"/>
+    <bean id="userServiceImpl3" class="com.qin.test.UserServiceImpl"/>
+    <bean id="userServiceImpl4" class="com.qin.test.UserServiceImpl"/>-->
+
+    <qin:registry protocol="redis" address="127.0.0.1:6379"/>
+    <qin:protocol name="http" host="127.0.0.1" port="8080"/>
+
+    <qin:service protocol="http" interface="com.qin.test.UserService" ref="userServiceImpl1"/>
+    <qin:service protocol="rmi" interface="com.qin.test.UserService" ref="userServiceImpl2"/>
+    <qin:service protocol="netty" interface="com.qin.test.UserService" ref="userServiceImpl3"/>
+
+    <qin:reference id="userServiceImpl1" interface="com.qin.test.UserService" protocol="http"/>
+</beans>

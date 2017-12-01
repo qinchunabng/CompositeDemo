@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CacheDemo/CacheDemo.iml" filepath="$PROJECT_DIR$/CacheDemo/CacheDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DubboConsumerDemo/DubboConsumerDemo.iml" filepath="$PROJECT_DIR$/DubboConsumerDemo/DubboConsumerDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DubboDemo/DubboDemo.iml" filepath="$PROJECT_DIR$/DubboDemo/DubboDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DubboProviderDemo/DubboProviderDemo.iml" filepath="$PROJECT_DIR$/DubboProviderDemo/DubboProviderDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/MQDemo/MQDemo.iml" filepath="$PROJECT_DIR$/MQDemo/MQDemo.iml" />
     </modules>
   </component>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:qin="http://www.qin.com/schema/soa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.qin.com/schema/soa http://www.qin.com/schema/soa.xsd">
+
+    <bean id="testService" class="com.qin.test.TestServiceImpl"/>
+
+    <qin:registry protocol="redis" address="127.0.0.1:6379"/>
+    <qin:protocol name="netty" host="127.0.0.1" port="8081" contextpath="/test"/>
+    <qin:service protocol="netty" interface="com.qin.test.TestService" ref="testService"/>
+</beans>
