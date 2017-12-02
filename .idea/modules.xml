@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/DubboConsumerDemo/DubboConsumerDemo.iml" filepath="$PROJECT_DIR$/DubboConsumerDemo/DubboConsumerDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/DubboDemo/DubboDemo.iml" filepath="$PROJECT_DIR$/DubboDemo/DubboDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/DubboProviderDemo/DubboProviderDemo.iml" filepath="$PROJECT_DIR$/DubboProviderDemo/DubboProviderDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JniTest/JniTest.iml" filepath="$PROJECT_DIR$/JniTest/JniTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/MQDemo/MQDemo.iml" filepath="$PROJECT_DIR$/MQDemo/MQDemo.iml" />
     </modules>
   </component>

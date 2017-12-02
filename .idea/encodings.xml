@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/DubboConsumerDemo" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DubboDemo" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DubboProviderDemo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/JniTest" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/MQDemo" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

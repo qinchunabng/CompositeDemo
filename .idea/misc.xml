@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/DubboDemo/pom.xml" />
         <option value="$PROJECT_DIR$/DubboConsumerDemo/pom.xml" />
         <option value="$PROJECT_DIR$/DubboProviderDemo/pom.xml" />
+        <option value="$PROJECT_DIR$/JniTest/pom.xml" />
       </list>
     </option>
   </component>

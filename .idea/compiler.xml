@@ -10,6 +10,7 @@
         <module name="DubboConsumerDemo" />
         <module name="DubboDemo" />
         <module name="DubboProviderDemo" />
+        <module name="JniTest" />
         <module name="MQDemo" />
       </profile>
     </annotationProcessing>
@@ -18,6 +19,7 @@
       <module name="DubboConsumerDemo" target="1.5" />
       <module name="DubboDemo" target="1.7" />
       <module name="DubboProviderDemo" target="1.7" />
+      <module name="JniTest" target="1.5" />
       <module name="MQDemo" target="1.5" />
     </bytecodeTargetLevel>
   </component>
