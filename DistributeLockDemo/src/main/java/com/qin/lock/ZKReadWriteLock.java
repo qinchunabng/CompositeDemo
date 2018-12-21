@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
@@ -26,6 +27,10 @@ public class ZKReadWriteLock implements ReadWriteLock {
      */
     private static final long SPIN_FOR_TIMEOUT_THRESHOLD = 1000L;
 
+    private static final String READ_LOCK_PREFIX = new Random().nextInt(10000000) + "-read-";
+
+    private static final String WRITE_LOCK_PREFIX = new Random().nextInt(10000000) + "-write-";
+
     /**
      * 自旋睡眠时间
      */
@@ -33,9 +38,9 @@ public class ZKReadWriteLock implements ReadWriteLock {
 
     private ZooKeeper zooKeeper;
 
-    private ReadLock readLock;
-
-    private WriteLock writeLock;
+//    private ReadLock readLock;
+//
+//    private WriteLock writeLock;
 
     private Comparator<String> nameComparator;
 
@@ -60,22 +65,19 @@ public class ZKReadWriteLock implements ReadWriteLock {
             return xs > ys ? 1 : (xs < ys ? -1 : 0);
         };
 
-        readLock = new ReadLock();
-        writeLock = new WriteLock();
+//        readLock = new ReadLock();
+//        writeLock = new WriteLock();
     }
 
     public DistributeLock readLock() {
-        if (writeLock == null) {
-            throw new LockInitialException("WriteLock has not be initialized!");
-        }
-        return readLock;
+        return new ReadLock();
     }
 
     public DistributeLock writeLock() {
-        if (writeLock == null) {
-            throw new LockInitialException("WriteLock has not be initialized!");
-        }
-        return writeLock;
+//        if (writeLock == null) {
+//            throw new LockInitialException("WriteLock has not be initialized!");
+//        }
+        return new WriteLock();
     }
 
     /**
@@ -94,8 +96,21 @@ public class ZKReadWriteLock implements ReadWriteLock {
      * @return
      */
     private String createLockNode(String name) throws Exception {
+        if (zooKeeper.exists(LOCK_NODE_PARENT_PATH, null) == null) {
+            synchronized (ZKReadWriteLock.class) {
+                if (zooKeeper.exists(LOCK_NODE_PARENT_PATH, null) == null)
+                    try {
+                        zooKeeper.create(LOCK_NODE_PARENT_PATH, "".getBytes(Charset.forName("UTF-8")),
+                                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                    } catch (KeeperException.NodeExistsException e) {//捕获这个异常防止创建冲突
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("{}创建冲突", LOCK_NODE_PARENT_PATH);
+                        }
+                    }
+            }
+        }
         return zooKeeper.create(LOCK_NODE_PARENT_PATH + "/" + name, "".getBytes("UTF-8"),
-                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
     /**
@@ -174,7 +189,7 @@ public class ZKReadWriteLock implements ReadWriteLock {
 
         private CyclicBarrier lockBarrier = new CyclicBarrier(2);
 
-        private String prefix = new Random().nextInt(10000000) + "-read-";
+//        private String prefix = new Random().nextInt(10000000) + "-read-";
 
         private String name;
 
@@ -185,7 +200,7 @@ public class ZKReadWriteLock implements ReadWriteLock {
             }
             //1.创建锁节点
             if (name == null) {
-                name = createLockNode(prefix);
+                name = createLockNode(READ_LOCK_PREFIX);
                 name = name.substring(name.lastIndexOf("/") + 1);
                 if (logger.isInfoEnabled()) {
                     logger.info("创建锁节点：{}", name);
@@ -209,7 +224,12 @@ public class ZKReadWriteLock implements ReadWriteLock {
             int index = Collections.binarySearch(nodes, name, nameComparator);
             for (int i = index - 1; i >= 0; i--) {
                 if (nodes.get(i).contains("write")) {
-                    zooKeeper.exists(LOCK_NODE_PARENT_PATH + "/" + nodes.get(i), this);
+                    Stat stat = zooKeeper.exists(LOCK_NODE_PARENT_PATH + "/" + nodes.get(i), this);
+                    //如果节点不存在，说明已经被删除，获取锁成功
+                    if (stat == null) {
+                        lockStatus = LockStatus.LOCKED;
+                        return;
+                    }
                     break;
                 }
             }
@@ -226,7 +246,7 @@ public class ZKReadWriteLock implements ReadWriteLock {
             }
             //1.创建锁节点
             if (name == null) {
-                name = createLockNode(prefix);
+                name = createLockNode(READ_LOCK_PREFIX);
                 name = name.substring(name.lastIndexOf("/") + 1);
                 if (logger.isInfoEnabled()) {
                     logger.info("创建锁节点：{}", name);
@@ -319,7 +339,7 @@ public class ZKReadWriteLock implements ReadWriteLock {
 
         private CyclicBarrier lockBarrier = new CyclicBarrier(2);
 
-        private String prefix = new Random().nextInt(10000000) + "-write-";
+//        private String prefix = new Random().nextInt(10000000) + "-write-";
 
         private String name;
 
@@ -331,7 +351,7 @@ public class ZKReadWriteLock implements ReadWriteLock {
 
             //1.创建锁节点
             if (name == null) {
-                name = createLockNode(prefix);
+                name = createLockNode(WRITE_LOCK_PREFIX);
                 name = name.substring(name.lastIndexOf("/") + 1);
                 if (logger.isInfoEnabled()) {
                     logger.info("创建锁节点：{}", name);
@@ -353,8 +373,13 @@ public class ZKReadWriteLock implements ReadWriteLock {
 
             //4.获取锁失败，定位到上一个锁节点，并监视
             int index = Collections.binarySearch(nodes, name, nameComparator);
-            zooKeeper.exists(LOCK_NODE_PARENT_PATH + "/" + nodes.get(index - 1), this);
+            Stat stat = zooKeeper.exists(LOCK_NODE_PARENT_PATH + "/" + nodes.get(index - 1), this);
 
+            //如果节点不存在，说明已经被删除，获取锁成功
+            if (stat == null) {
+                lockStatus = LockStatus.LOCKED;
+                return;
+            }
             //5.等待监视的节点被删除
             lockStatus = LockStatus.TRY_LOCK;
             lockBarrier.await();
@@ -368,7 +393,7 @@ public class ZKReadWriteLock implements ReadWriteLock {
 
             //1.创建节点
             if (name == null) {
-                name = createLockNode(prefix);
+                name = createLockNode(WRITE_LOCK_PREFIX);
                 name = name.substring(name.lastIndexOf("/") + 1);
                 if (logger.isInfoEnabled()) {
                     logger.info("创建锁节点：{}", name);
