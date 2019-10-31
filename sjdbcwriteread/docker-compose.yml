@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  mysql-master:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    container_name: mysql-master
+    hostname: mysql-master
+    ports:
+      - 13306:3306
+      - 13060:33060
+    volumes:
+      - /c/Users/pc/docker/mysql/master/data:/var/lib/mysql
+      - /c/Users/pc/docker/mysql/master/config:/etc/mysql/conf.d
+
+  mysql-slave:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    container_name: mysql-slave
+    hostname: mysql-slave
+    ports:
+      - 13307:3306
+    volumes:
+      - /c/Users/pc/docker/mysql/slave/data:/var/lib/mysql
+      - /c/Users/pc/docker/mysql/slave/config:/etc/mysql/conf.d
+    depends_on:
+      - mysql-master
