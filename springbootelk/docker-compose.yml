@@ -1,0 +1,59 @@
+version: '2'
+services:
+  log-service:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    networks:
+      - my_network
+    ports:
+      - 8020:8010
+    container_name: log-service
+    hostname: log-service
+    image: log-service
+    restart: always
+    volumes:
+      - ./logs:/log-service/logs
+
+  beat:
+    build:
+      context: ./
+      dockerfile: ./src/main/resources/elk/filebeat/Dockerfile
+    user: root
+    environment:
+      - BEAT_STRICT_PERMS=false
+    restart: always
+    container_name: filebeat
+    hostname: filebeat
+    image: my-filebeat
+    networks:
+      - my_network
+    volumes:
+      - ./logs:/var/log/log-service
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: elasticsearch:7.5.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - my_network
+    environment:
+      - discovery.type=single-node
+    hostname: elasticsearch
+    container_name: elasticsearch
+
+  kibana:
+    image: kibana:7.5.1
+    ports:
+      - 5601:5601
+    networks:
+      - my_network
+    hostname: kibana
+    container_name: kibana
+
+networks:
+  my_network:
+    external: true

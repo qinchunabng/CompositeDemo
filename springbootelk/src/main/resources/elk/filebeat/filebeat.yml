@@ -1,0 +1,11 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /home/log/*.log
+
+output.elasticsearch:
+  hosts: [my_network:9200]
+  index: "service-log-%{+yyyy.MM.dd}"
+setup.template.name: "filebeattest"
+setup.template.pattern: "filebeattest-*"
