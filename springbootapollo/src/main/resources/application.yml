@@ -1,0 +1,15 @@
+server:
+  port: 8761
+
+app:
+  id: springboot-apollo
+apollo:
+  meta: http://172.20.0.2:8080
+  bootstrap:
+    enabled: true
+    eagerLoad:
+      enabled: true
+
+logging:
+  level:
+    com.qin.controller: debug
