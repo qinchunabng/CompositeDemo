@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    <h2>page list</h2>
+    <a href="/user/common">common page</a>
+    <br/>
+    <a href="/user/admin">admin page</a>
+    <br/>
+    <button class="btn btn-primary" id="logout-btn" onclick="logout()">注销</button>
+<script>
+    function logout() {
+        location.href="/logout";
+    }
+</script>
+</body>
+</html>
